@@ -5,15 +5,6 @@ class Nlopt < Formula
   sha256 "8099633de9d71cbc06cd435da993eb424bbcdbded8f803cdaa9fb8c6e09c8e89"
   revision 2
 
-  bottle do
-    cellar :any
-    sha256 "9b08f332287446d6eb32c7b6fdf3732b1459dae9b9d04af3bf11d7924d549ebc" => :mojave
-    sha256 "8b24f8a85b1b9e553cfd97a88fb22093926fe787bbeeaa598636baf7adfb1ea3" => :high_sierra
-    sha256 "183d661c2b34ff468162b4bcc3bc7c287bcab47ff1bd4b902ea00fe188db1e52" => :sierra
-    sha256 "cfb26ea39b36e9a9ad472e2600864d040f02531ba2c922798f82455a25b73a30" => :el_capitan
-    sha256 "eed62f227cdfd93ba00d7abe061b4136945a4511d67651d0fa4aa07b196b7b7d" => :yosemite
-  end
-
   head do
     url "https://github.com/stevengj/nlopt.git"
     depends_on "cmake" => :build
@@ -29,20 +20,14 @@ class Nlopt < Formula
       system "cmake", ".", *std_cmake_args,
                       "-DBUILD_MATLAB=OFF",
                       "-DBUILD_OCTAVE=OFF",
-                      "-DWITH_CXX=ON"
+                      "-DWITH_CXX=OFF"
     else
       system "./configure", "--prefix=#{prefix}",
-                            "--enable-shared",
-                            "--with-cxx",
+                            "--without-cxx",
                             "--without-octave"
       system "make"
     end
     system "make", "install"
-
-    # Create library links for C programs
-    %w[0.dylib dylib a].each do |suffix|
-      lib.install_symlink "#{lib}/libnlopt_cxx.#{suffix}" => "#{lib}/libnlopt.#{suffix}"
-    end
   end
 
   test do
