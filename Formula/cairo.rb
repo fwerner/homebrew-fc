@@ -18,7 +18,13 @@ class Cairo < Formula
   depends_on "glib"
   depends_on "libpng"
   depends_on "pixman"
-  depends_on :x11
+  if OS.mac?
+    depends_on :x11
+  else
+    depends_on "linuxbrew/xorg/libx11"
+    depends_on "linuxbrew/xorg/libxext"
+    depends_on "linuxbrew/xorg/libxrender"
+  end
 
   def install
     if build.head?
@@ -31,7 +37,7 @@ class Cairo < Formula
                           "--enable-gobject=yes",
                           "--enable-svg=yes",
                           "--enable-tee=yes",
-                          "--enable-quartz-image",
+                          ("--enable-quartz-image" if OS.mac?),
                           "--enable-xcb=no",
                           "--enable-xlib=yes",
                           "--enable-xlib-xrender=yes"
